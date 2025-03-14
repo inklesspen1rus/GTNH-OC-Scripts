@@ -76,7 +76,7 @@ local tostring = tostring
 return function(str)
     str = tostring(str)
     local count = string.len(str)
-    local crc = (2 ^ 32 - 1) << 0
+    local crc = xor((2 ^ 32 - 1), 0)
     local i = 1
 
     while count > 0 do
@@ -87,7 +87,7 @@ return function(str)
     end
     crc = xor(crc, 0xFFFFFFFF)
     -- dirty hack for bitop return number < 0
-    if crc < 0 then crc = crc + (2 ^ 32) << 0 end 
+    if crc < 0 then crc = crc + xor((2 ^ 32), 0) end
 
     return crc
 end
