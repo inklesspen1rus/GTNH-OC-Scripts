@@ -26,4 +26,13 @@ function module.up() end
 ---@return true?, string?
 function module.down() end
 
+---@return true?, string?
+function module.place() end
+
+---@return true?, string?
+function module.placeUp() end
+
+---@return true?, string?
+function module.placeDown() end
+
 return module
