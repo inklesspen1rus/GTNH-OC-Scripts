@@ -114,7 +114,7 @@ local function tick()
 
             local itemStack = me.getItemsInNetwork(itemConfig.selector)
             -- Remove non-craftables from list
-            for x = #itemStack,1 do
+            for x = #itemStack,1, -1 do
                 if not itemStack[x].isCraftable then table.remove(itemStack, x) end
             end
             if #itemStack ~= 1 then
