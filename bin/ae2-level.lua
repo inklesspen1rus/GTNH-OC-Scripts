@@ -13,15 +13,12 @@ if #args == 0 then
 end
 
 if args[1] == 'genconfig' then
-    print([[return
-{
-    cpumatch = '%d*%-BG%-%d*',
-    items =
-    {
-        -- { level = 1024, batch = 16, selector = { label = 'Stone' } },
-        -- { level = 1024, batch = 16, selector = { label = 'Stone' } },
-    }
-}]])
+    print([[return{
+cpumatch = '%d*%-BG%-%d*',
+items={
+--{level=1024,batch=16,selector={label='Stone'}},
+--{level=1024,batch=16,selector={label='Stone'}},
+}}]])
     return
 end
 
@@ -107,7 +104,6 @@ local function tick()
             if itemCpuCraftMem[itemConfig] ~= nil then break end
 
             if not cpu then
-                print('Not enough CPUs')
                 startItem = itemIndex
                 return
             end
@@ -153,5 +149,5 @@ end
 
 while 1 do
     tick()
-    os.sleep(30)
+    os.sleep(5)
 end
