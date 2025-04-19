@@ -16,29 +16,20 @@ end
 
 if args[1] == 'genconfig' then
     print([[return {
-    workdir = '/home/netrunner-example',
-    command = 'cat',
-    args = {'cheat.sh'}
+    command = 'cat cheat.sh',
     files = {
-        ['cheat.sh'] = 'cheat.sh'
+        ['cheat.sh'] = 'https://cheat.sh/'
     }
 }]])
+    return
 end
 
 local config = loadfile(args[2])()
 ---@cast config netrunner.Config
 
-local shell = require('shell')
-
-shell.execute('rm', {}, '-rf', config.workdir)
-shell.execute('mkdir', {}, config.workdir)
-
 for filename, url in pairs(config.files) do
-    local success, error = shell.execute('wget', {PWD=config.workdir}, '-f', url, filename)
-    if not success then
-        print(error)
-        return
-    end
+    local code = os.execute('wget -f ' .. url .. ' ' .. filename)
+    if not code then return end
 end
 
-shell.execute(config.command, {PWD=config.workdir}, table.unpack(config.args))
+os.execute(config.command)
