@@ -54,7 +54,7 @@ local ser = require('serialization')
 
 ---@class ae2-level.Config
 ---@field cpumatch string
----@field items {level: integer, batch: integer, selector: table}[]
+---@field items {level: integer, batch: integer, selector: table, lock?: string}[]
 local config = loadfile(args[2] or defaultConfigName)()
 
 ---@return fun(): upgrade_me.CPUType?
@@ -72,10 +72,12 @@ end
 
 local startItem = 1
 
+---@type table<string, any>
+local lockMem = {}
 -- Our crafting memory to prevent same item crafting in parallel
 ---@type table<table, string>
 local itemCpuCraftMem = {}
----@type table<string, table>
+---@type table<string, {level: integer, batch: integer, selector: table, lock?: string}>
 local cpuItemCraftMem = {}
 
 local function tick()
@@ -87,7 +89,9 @@ local function tick()
     for cpu in availableCpus() do
         if cpuItemCraftMem[cpu.name] then
             itemCpuCraftMem[cpuItemCraftMem[cpu.name]] = nil
+            local itemConfig = cpuItemCraftMem[cpu.name]
             cpuItemCraftMem[cpu.name] = nil
+            lockMem[itemConfig.lock] = nil
         end
         table.insert(cpus, cpu)
     end
@@ -99,6 +103,8 @@ local function tick()
         repeat
             local itemIndex = (index + startItem - 2) % #config.items + 1
             local itemConfig = config.items[itemIndex]
+
+            if itemConfig.lock and lockMem[itemConfig.lock] then break end
 
             -- Do not craft if there are still active crafting
             if itemCpuCraftMem[itemConfig] ~= nil then break end
@@ -137,6 +143,7 @@ local function tick()
                     print('Requested craft ' .. itemStack.label)
                     itemCpuCraftMem[itemConfig] = cpu.name
                     cpuItemCraftMem[cpu.name] = itemConfig
+                    lockMem[itemConfig.lock] = 1
 
                     cpu = table.remove(cpus)
                     ---@cast cpu upgrade_me.CPUType?
