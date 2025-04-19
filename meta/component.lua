@@ -113,9 +113,36 @@ function CraftableType.request(amount, prioritizePower, cpuName) end
 ---@return upgrade_me.CraftableType[]
 function upgrade_me.getCraftables(filter) end
 
+local internet = {}
+
+---@class internet.Request
+local internetRequest = {}
+
+---@return boolean, string?
+function internetRequest.finishConnect() end
+
+---@param n? integer
+---@return string
+function internetRequest.read(n) end
+
+---@return number code
+---@return string message
+---@return table headers
+function internetRequest.response() end
+
+function internetRequest.close() end
+
+---@param url string
+---@return internet.Request
+function internet.request(url) end
+
+---@return boolean
+function internet.isHttpEnabled() end
+
 return
 {
     inventory_controller = inventory_controller,
     geolyzer = geolyzer,
     upgrade_me = upgrade_me,
+    internet = internet
 }
