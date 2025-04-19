@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "luabundler": "^1.2.3"
+    "luabundler": "^1.2.3",
+    "luamin": "^1.0.4"
   }
 }

@@ -1,7 +1,12 @@
 MINIFY = lua lua-minify/minify.lua minify
+
+# Sadly, but "lua-minify" can't handle some Lua code
+# Luamin more powerful but too slow to run
+LUAMIN = npx luamin -f
+
 ECHO_REPO = echo --- $$(git remote get-url origin)
 
-all: minify-inkgz minify-crc32 minify-crc32_2 minify-witchery-cauldron.lua-autocraft minify-geotrack minify-build-crop-plant minify-ae2-level
+all: minify-inkgz minify-crc32 minify-crc32_2 minify-witchery-cauldron.lua-autocraft minify-geotrack minify-build-crop-plant minify-ae2-level minify-inklog
 
 minify-ae2-level:
 	mkdir -p dist/bin
@@ -22,6 +27,10 @@ minify-inkgz:
 minify-crc32:
 	mkdir -p dist/libs
 	($(ECHO_REPO); $(MINIFY) libs/crc32.lua) > dist/libs/crc32.lua
+
+minify-inklog:
+	mkdir -p dist/libs
+	($(ECHO_REPO); $(LUAMIN) libs/inklog.lua) > dist/libs/inklog.lua
 
 minify-crc32_2:
 	mkdir -p dist/libs
