@@ -1,0 +1,7 @@
+[package]
+name = "autoclick"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+mouse-rs = "0.4.2"
