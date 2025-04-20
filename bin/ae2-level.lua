@@ -156,5 +156,5 @@ end
 
 while 1 do
     tick()
-    os.sleep(5)
+    os.sleep(1)
 end
