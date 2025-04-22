@@ -143,7 +143,7 @@ local function tick()
                     print('Requested craft ' .. itemStack.label)
                     itemCpuCraftMem[itemConfig] = cpu.name
                     cpuItemCraftMem[cpu.name] = itemConfig
-                    if itemConfig.lock then lockMem[itemConfig.lock] = 1 end
+                    if itemConfig.lock then print(itemConfig.lock) lockMem[itemConfig.lock] = 1 end
 
                     cpu = table.remove(cpus)
                     ---@cast cpu upgrade_me.CPUType?
