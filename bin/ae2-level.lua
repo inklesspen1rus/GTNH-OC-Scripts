@@ -91,7 +91,7 @@ local function tick()
             itemCpuCraftMem[cpuItemCraftMem[cpu.name]] = nil
             local itemConfig = cpuItemCraftMem[cpu.name]
             cpuItemCraftMem[cpu.name] = nil
-            lockMem[itemConfig.lock] = nil
+            if itemConfig.lock then lockMem[itemConfig.lock] = nil end
         end
         table.insert(cpus, cpu)
     end
@@ -143,7 +143,7 @@ local function tick()
                     print('Requested craft ' .. itemStack.label)
                     itemCpuCraftMem[itemConfig] = cpu.name
                     cpuItemCraftMem[cpu.name] = itemConfig
-                    lockMem[itemConfig.lock] = 1
+                    if itemConfig.lock then lockMem[itemConfig.lock] = 1 end
 
                     cpu = table.remove(cpus)
                     ---@cast cpu upgrade_me.CPUType?
