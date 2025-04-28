@@ -6,11 +6,15 @@ LUAMIN = npx luamin -f
 
 ECHO_REPO = echo --- $$(git remote get-url origin)
 
-all: minify-inkgz minify-crc32 minify-crc32_2 minify-witchery-cauldron.lua-autocraft minify-geotrack minify-build-crop-plant minify-ae2-level minify-inklog minify-netrunner
+all: minify-inkgz minify-crc32 minify-crc32_2 minify-witchery-cauldron.lua-autocraft minify-geotrack minify-build-crop-plant minify-ae2-level minify-inklog minify-netrunner minify-ae2-tc-infuser
 
 minify-netrunner:
 	mkdir -p dist/bin
 	($(ECHO_REPO); $(MINIFY) bin/netrunner.lua) > dist/bin/netrunner.lua
+
+minify-ae2-tc-infuser:
+	mkdir -p dist/bin
+	($(ECHO_REPO); $(MINIFY) bin/ae2-tc-infuser.lua) > dist/bin/ae2-tc-infuser.lua
 
 minify-ae2-level:
 	mkdir -p dist/bin
