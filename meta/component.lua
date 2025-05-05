@@ -139,10 +139,19 @@ function internet.request(url) end
 ---@return boolean
 function internet.isHttpEnabled() end
 
+local redstone = {}
+
+---@param side integer Side
+---@param value integer Redstone output
+---@return integer oldValue
+---@overload fun(side: integer, value: table<integer,integer>): table<integer,integer>
+function redstone.setOutput(side, value) end
+
 return
 {
     inventory_controller = inventory_controller,
     geolyzer = geolyzer,
     upgrade_me = upgrade_me,
-    internet = internet
+    internet = internet,
+    redstone = redstone,
 }
