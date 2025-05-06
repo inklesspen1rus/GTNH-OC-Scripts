@@ -36,14 +36,23 @@ local function createWaitWorker(currentItemStack, returnWorker)
             repeat
                 local itemStack = inv.getStackInSlot(sides.front, 1)
 
+                if itemStack == nil then
+                    -- Return to idle worker
+                    currentWorker = returnWorker
+                    return
+                end
+
                 -- Wait for infusion completion
                 if isItemStacksEqual(itemStack, currentItemStack) then
                     coroutine.yield()
                     break
                 end
 
-                -- Suck infuser item
-                inv.suckFromSlot(sides.front, 1)
+                -- Suck infuser result
+                for k = 1, (itemStack.size or 1) do
+                    -- idk why but so
+                    inv.suckFromSlot(sides.front, 1, 1)
+                end
 
                 -- Move to AE2 interface
                 while not robot.up() do end
