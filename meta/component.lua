@@ -153,11 +153,43 @@ local gpu = {}
 ---@param x integer
 ---@param y integer
 ---@return string symbol
----@return number fgColor
----@return number bgColor
----@return number? fgPalleteIndex
----@return number? bgPalleteIndex
+---@return integer fgColor
+---@return integer bgColor
+---@return integer? fgPalleteIndex
+---@return integer? bgPalleteIndex
 function gpu.get(x, y) end
+
+---@return integer w
+---@return integer h
+function gpu.getResolution() end
+
+local glasses = {}
+
+---@class glasses.TextLabel
+local glassesTextLabel = {}
+
+---@param x integer
+---@param y integer
+function glassesTextLabel.setPosition(x, y) end
+
+---@param alpha number
+function glassesTextLabel.setAlpha(alpha) end
+
+---@param r number
+---@param g number
+---@param b number
+function glassesTextLabel.setColor(r, g, b) end
+
+---@param text string
+function glassesTextLabel.setText(text) end
+
+---@param scale number
+function glassesTextLabel.setScale(scale) end
+
+---@return glasses.TextLabel
+function glasses.addTextLabel() end
+
+function glasses.removeAll() end
 
 return
 {
@@ -167,4 +199,5 @@ return
     internet = internet,
     redstone = redstone,
     gpu = gpu,
+    glasses = glasses,
 }
