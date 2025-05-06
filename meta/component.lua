@@ -147,6 +147,18 @@ local redstone = {}
 ---@overload fun(side: integer, value: table<integer,integer>): table<integer,integer>
 function redstone.setOutput(side, value) end
 
+
+local gpu = {}
+
+---@param x integer
+---@param y integer
+---@return string symbol
+---@return number fgColor
+---@return number bgColor
+---@return number? fgPalleteIndex
+---@return number? bgPalleteIndex
+function gpu.get(x, y) end
+
 return
 {
     inventory_controller = inventory_controller,
@@ -154,4 +166,5 @@ return
     upgrade_me = upgrade_me,
     internet = internet,
     redstone = redstone,
+    gpu = gpu,
 }
