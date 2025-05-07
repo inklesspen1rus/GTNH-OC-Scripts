@@ -1,5 +1,7 @@
 MINIFY = lua lua-minify/minify.lua minify
 
+LUABUNDLER = npx luabundler bundle
+
 # Sadly, but "lua-minify" can't handle some Lua code
 # Luamin more powerful but too slow to run
 LUAMIN = npx luamin -f
@@ -7,6 +9,18 @@ LUAMIN = npx luamin -f
 ECHO_REPO = echo --- $$(git remote get-url origin)
 
 all: minify-inkgz minify-crc32 minify-crc32_2 minify-witchery-cauldron.lua-autocraft minify-geotrack minify-build-crop-plant minify-ae2-level minify-inklog minify-netrunner minify-ae2-tc-infuser minify-ar-remote-display
+
+bundle-ar-calibrate:
+	mkdir -p build/bin
+	mkdir -p dist/bin
+	$(LUABUNDLER) -p libs/?.lua -o build/bin/ar-calibrate-bundled.lua bin/ar-calibrate.lua
+	($(ECHO_REPO); $(LUAMIN) build/bin/ar-calibrate-bundled.lua) > dist/bin/ar-calibrate-bundled.lua
+
+bundle-ar-remote-display:
+	mkdir -p build/bin
+	mkdir -p dist/bin
+	$(LUABUNDLER) -p libs/?.lua -o build/bin/ar-remote-display-bundled.lua bin/ar-remote-display.lua
+	($(ECHO_REPO); $(LUAMIN) build/bin/ar-remote-display-bundled.lua) > dist/bin/ar-remote-display-bundled.lua
 
 minify-ar-remote-display:
 	mkdir -p dist/bin

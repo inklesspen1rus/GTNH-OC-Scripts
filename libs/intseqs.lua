@@ -111,7 +111,7 @@ function module.newMerged(a, b)
             --a ****
             --b     *???
             --      ^ b's start after a's end
-            
+
             new[#new + 1] = math.min(b[bPos], a[aPos])
             new[#new + 1] = math.max(b[bPos + 1], a[aPos + 1])
             bPos = bPos + 2

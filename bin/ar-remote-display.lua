@@ -1,4 +1,10 @@
-local args = table.pack(...)
+local unbundle = _G.require
+
+local args = {}
+if unbundle == require then
+    -- Bundler does not support varargs, sad
+    args = table.pack(...)
+end
 
 local textScale = tonumber(args[1]) or .5
 local posXScale = tonumber(args[2]) or textScale * 4
@@ -14,24 +20,24 @@ local loop = true
 local coroInterval = 0.01
 local yield_interval = (72 / 20) * .5 -- 0.5 tick
 
-local component = require('component')
-local unicode   = require('unicode')
-local computer       = require('computer')
+local component = unbundle('component')
+local unicode   = unbundle('unicode')
+local computer       = unbundle('computer')
 local intseqs = require('intseqs')
 local ar = component.glasses
 local gpu = component.gpu
-local bit = require('bit32')
+local bit = unbundle('bit32')
 
 local isMineOS = not os.sleep
 
 local function runBgTask(fun, interval)
     if isMineOS then
-        local event = require('Event')
+        local event = unbundle('Event')
         event.addHandler(function()
             fun()
         end, interval)
     else
-        local thread = require('thread')
+        local thread = unbundle('thread')
         thread.create(function()
             while 1 do
                 fun()
@@ -43,7 +49,7 @@ end
 
 -- MineOS support
 ---@type fun(time: number)
-local sleep = os.sleep or require('Event').sleep
+local sleep = os.sleep or unbundle('Event').sleep
 
 local w, h = gpu.getResolution()
 
@@ -176,7 +182,9 @@ local function writeTextRow(pixels, y, yieldIfNeeded)
 
                 intseqs.add(seqs, lastWidget.getID())
             end
-
+        end
+        
+        if lastWidget then
             count = count + 1
             chars[count] = c
         end
