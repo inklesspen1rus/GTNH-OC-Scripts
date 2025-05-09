@@ -10,13 +10,13 @@
       "@opct/openos"
     ],
     "strict": true,
-    "outDir": "dist-tstl",
+    "outDir": "dist",
   },
   "include": ["bin", "libs"],
   "tstl": {
     "luaTarget": "5.3",
     "buildMode": "default",
-    "luaLibImport": "inline",
+    "luaLibImport": "require",
     "noImplicitGlobalVariables": true,
 
     "luaPlugins": [
