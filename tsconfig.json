@@ -1,0 +1,34 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TypeScriptToLua/TypeScriptToLua/master/tsconfig-schema.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "moduleResolution": "Node",
+    "types": [
+      "lua-types/5.2",
+      "@typescript-to-lua/language-extensions",
+      "@opct/openos"
+    ],
+    "strict": true,
+    "outDir": "dist-tstl",
+  },
+  "include": ["bin", "libs"],
+  "tstl": {
+    "luaTarget": "5.3",
+    "buildMode": "default",
+    "luaLibImport": "inline",
+    "noImplicitGlobalVariables": true,
+
+    "luaPlugins": [
+
+      // Minify lualib
+      { "name": "./tstl-plugins/minify-lualib.ts" },
+
+      // Split lualib from bundle, also minifies lualib
+      { "name": "./tstl-plugins/split-bundle-lualib.ts" },
+
+      // Minify every file
+    //   { "name": "./tstl-plugins/minify.ts" },
+    ]
+  }
+}

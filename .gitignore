@@ -1,4 +1,5 @@
 /dist
+/dist-tstl
 /build
 node_modules
 target
