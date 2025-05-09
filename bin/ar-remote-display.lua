@@ -1,10 +1,6 @@
 local unbundle = _G.require
 
 local args = {}
-if unbundle == require then
-    -- Bundler does not support varargs, sad
-    args = table.pack(...)
-end
 
 local textScale = tonumber(args[1]) or .5
 local posXScale = tonumber(args[2]) or textScale * 4
@@ -16,16 +12,21 @@ local bgColoring = (tonumber(args[6]) or 1) == 1
 local accurate = (tonumber(args[7]) or 1) == 1
 local safe = (tonumber(args[8]) or 1) == 1
 local unsafeReplacement = args[9] or '@'
-local loop = true
-local coroInterval = 0.01
+local installEventHandler = true
+local coroInterval = 0.05
 local yield_interval = (72 / 20) * .5 -- 0.5 tick
 
+---@module "component"
 local component = unbundle('component')
-local unicode   = unbundle('unicode')
-local computer       = unbundle('computer')
+---@module "unicode"
+local unicode = unbundle('unicode')
+---@module "computer"
+local computer = unbundle('computer')
 local intseqs = require('intseqs')
 local ar = component.glasses
 local gpu = component.gpu
+
+---@module "bit32"
 local bit = unbundle('bit32')
 
 local isMineOS = not os.sleep
@@ -33,17 +34,11 @@ local isMineOS = not os.sleep
 local function runBgTask(fun, interval)
     if isMineOS then
         local event = unbundle('Event')
-        event.addHandler(function()
-            fun()
-        end, interval)
+        event.addHandler(function() fun() end, interval)
     else
-        local thread = unbundle('thread')
-        thread.create(function()
-            while 1 do
-                fun()
-                os.sleep(interval)
-            end
-        end)
+        ---@module "event"
+        local event = unbundle('event')
+        event.timer(interval, fun, math.huge)
     end
 end
 
@@ -183,7 +178,7 @@ local function writeTextRow(pixels, y, yieldIfNeeded)
                 intseqs.add(seqs, lastWidget.getID())
             end
         end
-        
+
         if lastWidget then
             count = count + 1
             chars[count] = c
@@ -233,10 +228,6 @@ coro = coroutine.create(function()
             local succ = pcall(function()
                 local oldWIds = rowWidgets[y] or intseqs.new()
 
-                for wid in intseqs.iterNums(oldWIds) do
-                    ar_removeObject(wid)
-                end
-
                 for x = 1, w do
                     local c, fg, bg = gpu_get(x, y)
                     local row = pixels[x]
@@ -252,6 +243,10 @@ coro = coroutine.create(function()
                 intseqs.append(wIds1, wIds2)
                 rowWidgets[y] = wIds1
 
+                for wid in intseqs.iterNums(oldWIds) do
+                    ar_removeObject(wid)
+                end
+
                 yieldIfNeeded()
             end)
 
@@ -263,10 +258,10 @@ coro = coroutine.create(function()
             end
         end
         coro_yield()
-    until not loop
+    until not installEventHandler
 end)
 
-if loop then
+if installEventHandler then
     runBgTask(function() coro_resume(coro) end, coroInterval)
 else
     while coro_resume(coro) do sleep(coroInterval) end

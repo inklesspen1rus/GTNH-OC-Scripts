@@ -1,25 +1,41 @@
 MINIFY = lua lua-minify/minify.lua minify
 
-LUABUNDLER = npx luabundler bundle
+LUABUNDLER = npx luabundler bundle -p libs/?.lua -p libs/ar-widgets/? -i
 
 # Sadly, but "lua-minify" can't handle some Lua code
 # Luamin more powerful but too slow to run
 LUAMIN = npx luamin -f
 
-ECHO_REPO = echo --- $$(git remote get-url origin)
+ECHO_REPO = echo --- $$(git remote get-url origin) $$(git rev-parse HEAD)
 
-all: minify-inkgz minify-crc32 minify-crc32_2 minify-witchery-cauldron.lua-autocraft minify-geotrack minify-build-crop-plant minify-ae2-level minify-inklog minify-netrunner minify-ae2-tc-infuser minify-ar-remote-display
+all: minify bundle
+
+minify: minify-inkgz minify-crc32 minify-crc32_2 minify-witchery-cauldron.lua-autocraft minify-geotrack minify-build-crop-plant minify-ae2-level minify-inklog minify-netrunner minify-ae2-tc-infuser minify-ar-remote-display
+
+bundle: bundle-ar-calibrate bundle-ar-remote-display bundle-ar-tps bundle-ar-reboot-button
+
+bundle-ar-reboot-button:
+	mkdir -p build/bin
+	mkdir -p dist/bin
+	$(LUABUNDLER) -o build/bin/ar-reboot-button-bundled.lua bin/ar-reboot-button.lua
+	($(ECHO_REPO); $(LUAMIN) build/bin/ar-reboot-button-bundled.lua) > dist/bin/ar-reboot-button-bundled.lua
+
+bundle-ar-tps:
+	mkdir -p build/bin
+	mkdir -p dist/bin
+	$(LUABUNDLER) -o build/bin/ar-tps-bundled.lua bin/ar-tps.lua
+	($(ECHO_REPO); $(LUAMIN) build/bin/ar-tps-bundled.lua) > dist/bin/ar-tps-bundled.lua
 
 bundle-ar-calibrate:
 	mkdir -p build/bin
 	mkdir -p dist/bin
-	$(LUABUNDLER) -p libs/?.lua -o build/bin/ar-calibrate-bundled.lua bin/ar-calibrate.lua
+	$(LUABUNDLER) -o build/bin/ar-calibrate-bundled.lua bin/ar-calibrate.lua
 	($(ECHO_REPO); $(LUAMIN) build/bin/ar-calibrate-bundled.lua) > dist/bin/ar-calibrate-bundled.lua
 
 bundle-ar-remote-display:
 	mkdir -p build/bin
 	mkdir -p dist/bin
-	$(LUABUNDLER) -p libs/?.lua -o build/bin/ar-remote-display-bundled.lua bin/ar-remote-display.lua
+	$(LUABUNDLER) -o build/bin/ar-remote-display-bundled.lua bin/ar-remote-display.lua
 	($(ECHO_REPO); $(LUAMIN) build/bin/ar-remote-display-bundled.lua) > dist/bin/ar-remote-display-bundled.lua
 
 minify-ar-remote-display:

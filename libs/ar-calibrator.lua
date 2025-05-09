@@ -97,7 +97,7 @@ local function renderChooseStep(glasses, setup, setupName)
         setup.fontScaleWidthRatio * 2,
         setup.fontScaleHeightRatio,
         0,
-[[Выберите подходящий для вашего экрана пресет
+[[Выберите наиболее компактный пресет для вашего экрана
 Нажмите ЛКМ для смены пресета
 Нажмите ПКМ для подтверждения
 Текущий пресет: ]] .. setupName,
