@@ -12,7 +12,7 @@ const component = _component as typeof _component & {
             count(this: void): number,
             getAll(this:void): any
         } & LuaIterable<any>]> | LuaMultiReturn<[undefined, string]>,
-        transferItem(this:void, sourceSide: number, sinkSide: number, count: number, sourceSlot: number, sinkSlot: number): number
+        transferItem(this:void, sourceSide: number, sinkSide: number, count?: number, sourceSlot?: number, sinkSlot?: number): number
     }
 };
 
@@ -48,14 +48,11 @@ function startAndWaitAsm() {
         error('Не удалось запустить ассемблер')
     }
 
-    while (true) {
-        const [status, time] = assembler.status()
-        if (status == 'busy') os.sleep(.25)
-    }
+    while (assembler.status()[0] == 'busy') os.sleep(.25);
 }
 
 function transferAsmToInterface() {
-    while (transposer.transferItem(assemblerSide, interfaceSide, 1, 1, 1) != 1);
+    while (transposer.transferItem(assemblerSide, interfaceSide) != 1);
 }
 
 while (true) {
