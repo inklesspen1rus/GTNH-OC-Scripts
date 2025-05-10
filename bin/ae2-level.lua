@@ -1,3 +1,4 @@
+local event = require "event"
 local args = table.pack(...)
 local defaultConfigName = 'ae2-level-config.lua'
 
@@ -156,5 +157,5 @@ end
 
 while 1 do
     tick()
-    os.sleep(1)
+    if event.pull('interrupted') then break end
 end
