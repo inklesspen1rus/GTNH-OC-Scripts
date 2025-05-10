@@ -157,5 +157,5 @@ end
 
 while 1 do
     tick()
-    if event.pull('interrupted') then break end
+    if event.pull(1, 'interrupted') then break end
 end
