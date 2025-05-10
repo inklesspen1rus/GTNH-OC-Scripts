@@ -79,6 +79,7 @@ local function writeBackground(pixels, y, yieldIfNeeded)
         if lastWidget then
             if lastBg ~= bg then
                 lastWidget.setSize(posYScale, count * posXScale)
+                lastWidget.setAlpha(1)
                 count = 1
                 lastWidget = nil
                 yieldIfNeeded()
@@ -87,8 +88,8 @@ local function writeBackground(pixels, y, yieldIfNeeded)
 
         if not lastWidget then
             lastWidget = ar_addRect()
+            lastWidget.setAlpha(0)
             lastWidget.setPosition(posX + (x - 1) * posXScale, posY + (y - 1) * posYScale)
-            lastWidget.setAlpha(1)
             lastWidget.setColor(gpuColorToRGB(bg))
             lastBg = bg
             count = 0
@@ -159,6 +160,7 @@ local function writeTextRow(pixels, y, yieldIfNeeded)
         if lastWidget then
             if shouldBeginNewWord(c, fg, lastFg) then
                 lastWidget.setText(table.concat(chars, nil, 1, count))
+                lastWidget.setAlpha(1)
                 count = 0
                 lastWidget = nil
                 yieldIfNeeded()
@@ -168,9 +170,9 @@ local function writeTextRow(pixels, y, yieldIfNeeded)
         if shouldOutput(c) then
             if not lastWidget then
                 lastWidget = ar_addTextLabel()
+                lastWidget.setAlpha(0)
                 lastWidget.setPosition(posX + (x - 1) * posXScale, posY + (y - 1) * posYScale)
                 lastWidget.setScale(textScale)
-                lastWidget.setAlpha(1)
                 lastWidget.setColor(gpuColorToRGB(fg))
                 lastFg = fg
                 count = 0
@@ -238,10 +240,10 @@ coro = coroutine.create(function()
 
                 yieldIfNeeded()
 
-                local wIds1 = writeBackground(pixels, y, yieldIfNeeded)
+                -- local wIds1 = writeBackground(pixels, y, yieldIfNeeded)
                 local wIds2 = writeTextRow(pixels, y, yieldIfNeeded)
-                intseqs.append(wIds1, wIds2)
-                rowWidgets[y] = wIds1
+                -- intseqs.append(wIds1, wIds2)
+                rowWidgets[y] = wIds2
 
                 for wid in intseqs.iterNums(oldWIds) do
                     ar_removeObject(wid)
