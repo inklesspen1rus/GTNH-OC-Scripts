@@ -3,21 +3,34 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
-    "moduleResolution": "Node",
+    "module": "Node16",
+    "moduleResolution": "nodenext",
     "types": [
       "lua-types/5.2",
       "@typescript-to-lua/language-extensions",
-      "@opct/openos"
+      "@opct/openos",
+      "@opct/ae2",
     ],
+    "paths": {
+      "*": ["./libs/*"]
+    },
+    "baseUrl": ".",
     "strict": true,
     "outDir": "dist",
+    "jsx": "react",
+    "jsxFactory": "Leact.create",
+    "jsxFragmentFactory": "Leact.Fragment",
   },
-  "include": ["bin", "libs"],
+  "include": ["libs", "bin", "infrastructure", "tests"],
+  "exclude": ["dist", "tstl-plugins"],
   "tstl": {
     "luaTarget": "5.3",
     "buildMode": "default",
     "luaLibImport": "require",
     "noImplicitGlobalVariables": true,
+
+    // "luaBundleEntry": "./bin/ar-tps-ts.ts",
+    // "luaBundle": "ar-tps-ts-bundle.lua",
 
     "luaPlugins": [
 
@@ -25,10 +38,12 @@
       { "name": "./tstl-plugins/minify-lualib.ts" },
 
       // Split lualib from bundle, also minifies lualib
-      { "name": "./tstl-plugins/split-bundle-lualib.ts" },
+      // { "name": "./tstl-plugins/split-bundle-lualib.ts" },
 
       // Minify every file
-    //   { "name": "./tstl-plugins/minify.ts" },
+      { "name": "./tstl-plugins/minify.ts" },
+
+      // { "name": "./tstl-plugins/resolver.ts" },
     ]
   }
 }

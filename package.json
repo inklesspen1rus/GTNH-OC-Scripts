@@ -1,9 +1,12 @@
 {
   "dependencies": {
     "luabundler": "^1.2.3",
-    "luamin": "^1.0.4"
+    "luamin": "^1.0.4",
+    "leact-tstl": "file:/home/inklesspen/Documents/MegaProjects/TSX2Lua-TestTSX"
   },
+  "type": "commonjs",
   "devDependencies": {
+    "@opct/ae2": "^0.1.3",
     "@opct/openos": "^0.1.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
