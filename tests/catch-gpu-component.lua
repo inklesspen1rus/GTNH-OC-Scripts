@@ -1,0 +1,1 @@
+local component = require('component') local component_invoke = component.invoke component.invoke = function(address, method, ...) if component.get(address, 'geolyzer') == address then print('Fired ' .. method, ...) end return component_invoke(address, method, ...) end

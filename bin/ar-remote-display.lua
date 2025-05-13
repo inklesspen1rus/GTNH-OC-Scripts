@@ -15,6 +15,8 @@ local unsafeReplacement = args[9] or '@'
 local installEventHandler = true
 local coroInterval = 0.05
 local yield_interval = (72 / 20) * .5 -- 0.5 tick
+-- Does not work on MineOS. Idk why
+local eventBasedUpdate = true
 
 ---@module "component"
 local component = unbundle('component')
@@ -22,7 +24,10 @@ local component = unbundle('component')
 local unicode = unbundle('unicode')
 ---@module "computer"
 local computer = unbundle('computer')
+
 local intseqs = require('intseqs')
+local component_hook = require('component-hook')
+
 local ar = component.glasses
 local gpu = component.gpu
 
@@ -47,6 +52,13 @@ end
 local sleep = os.sleep or unbundle('Event').sleep
 
 local w, h = gpu.getResolution()
+
+---@type table<integer, any>
+local rowUpdateBit = {}
+
+for y = 1,h do
+    table.insert(rowUpdateBit, y)
+end
 
 ---@param gpuColor integer
 ---@return number r
@@ -225,8 +237,61 @@ coro = coroutine.create(function()
 
     ar.removeAll()
 
+    if eventBasedUpdate and installEventHandler then
+        component_hook.post(component.gpu.address, function(success, _, _, method, args)
+            if not success then return end
+
+            local row, height = 0, 0
+            if method == 'set' then
+                local _, lrow, value, vertical = table.unpack(args)
+                row = lrow
+
+                if vertical then
+                    height = unicode.len(value)
+                else
+                    height = 1
+                end
+            elseif method == 'copy' then
+                local lrow = 0
+                _, lrow, _, height, _, row = table.unpack(args)
+                row = row + lrow
+            elseif method == 'fill' then
+                _, row, _, height = table.unpack(args)
+            elseif method == 'bitblt' then
+                local dst, _, lrow, _, lheight = table.unpack(args)
+                if (dst or 0) == 0 then
+                    row, height = lrow or 1, lheight or h
+                end
+            end
+            
+            for dy = 0,(height-1) do
+                local y = row + dy
+                rowUpdateBit[y] = 0
+            end
+        end)
+    end
+
+    local rowIds = {}
+    for y = 1,h do
+        table.insert(rowIds, y)
+    end
+
     repeat
-        for y = 1, h do
+        if eventBasedUpdate then
+            rowIds = {}
+            while 1 do
+                local y = next(rowUpdateBit)
+                if not y then break end
+                rowUpdateBit[y] = nil
+
+                if y >= 1 and y <= h then
+                    table.insert(rowIds, y)
+                end
+            end
+            table.sort(rowIds)
+        end
+
+        for _, y in ipairs(rowIds) do
             local succ = pcall(function()
                 local oldWIds = rowWidgets[y] or intseqs.new()
 
