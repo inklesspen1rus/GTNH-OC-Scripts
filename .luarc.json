@@ -8,10 +8,11 @@
     "runtime.path": [
         "?.lua",
         "?/init.lua",
-        "node_modules/?.lua"
+        "node_modules/*/?.lua"
     ],
     "workspace.ignoreDir": [
         ".vscode",
         "packages"
-    ]
+    ],
+    "workspace.useGitIgnore": false
 }
