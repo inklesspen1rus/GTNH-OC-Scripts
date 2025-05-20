@@ -1,8 +1,9 @@
 {
   "dependencies": {
+    "leact-tstl": "file:/home/inklesspen/Documents/MegaProjects/TSX2Lua-TestTSX",
     "luabundler": "^1.2.3",
     "luamin": "^1.0.4",
-    "leact-tstl": "file:/home/inklesspen/Documents/MegaProjects/TSX2Lua-TestTSX"
+    "tstl-nbt": "file:packages/nbt"
   },
   "type": "commonjs",
   "devDependencies": {

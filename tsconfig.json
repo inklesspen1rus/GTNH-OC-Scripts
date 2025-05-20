@@ -22,7 +22,7 @@
     "jsxFragmentFactory": "Leact.Fragment",
   },
   "include": ["libs", "bin", "infrastructure", "tests"],
-  "exclude": ["dist", "tstl-plugins"],
+  "exclude": ["dist", "tstl-plugins", "packages"],
   "tstl": {
     "luaTarget": "5.3",
     "buildMode": "default",
@@ -41,7 +41,7 @@
       // { "name": "./tstl-plugins/split-bundle-lualib.ts" },
 
       // Minify every file
-      { "name": "./tstl-plugins/minify.ts" },
+      // { "name": "./tstl-plugins/minify.ts" },
 
       // { "name": "./tstl-plugins/resolver.ts" },
     ]

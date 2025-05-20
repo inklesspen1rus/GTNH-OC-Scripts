@@ -1,6 +1,5 @@
 MINIFY = lua lua-minify/minify.lua minify
 
-LUABUNDLER = npx luabundler bundle -p libs/?.lua -p libs/ar-widgets/? -i
 LUABUNDLER = npx luabundler bundle -p libs/?.lua -p dist/libs/?.lua -i
 
 # Sadly, but "lua-minify" can't handle some Lua code
@@ -14,9 +13,9 @@ all: tstl minify bundle
 tstl:
 	npx tstl
 
-minify: minify-inkgz minify-crc32 minify-crc32_2 minify-witchery-cauldron.lua-autocraft minify-geotrack minify-build-crop-plant minify-ae2-level minify-inklog minify-netrunner minify-ae2-tc-infuser minify-ar-remote-display
+minify: minify-inkgz minify-crc32 minify-crc32_2 minify-witchery-cauldron.lua-autocraft minify-geotrack minify-build-crop-plant minify-ae2-level minify-inklog minify-netrunner minify-ae2-tc-infuser minify-ar-remote-display minify-ar-cam-scan
 
-bundle: tstl bundle-ar-calibrate bundle-ar-remote-display bundle-ar-tps bundle-ar-reboot-button bundle-ar-tps-ts
+bundle: tstl bundle-ar-calibrate bundle-ar-remote-display bundle-ar-tps bundle-ar-reboot-button bundle-ar-tps-ts bundle-ar-cam-scan
 
 bundle-ar-reboot-button:
 	mkdir -p build/bin
@@ -48,9 +47,19 @@ bundle-ar-remote-display:
 	$(LUABUNDLER) -o build/bin/ar-remote-display-bundled.lua bin/ar-remote-display.lua
 	($(ECHO_REPO); $(LUAMIN) build/bin/ar-remote-display-bundled.lua) > dist/bin/ar-remote-display-bundled.lua
 
+bundle-ar-cam-scan:
+	mkdir -p build/bin
+	mkdir -p dist/bin
+	$(LUABUNDLER) -o build/bin/ar-cam-scan-bundled.lua bin/ar-cam-scan.lua
+	($(ECHO_REPO); $(LUAMIN) build/bin/ar-cam-scan-bundled.lua) > dist/bin/ar-cam-scan-bundled.lua
+
 minify-ar-remote-display:
 	mkdir -p dist/bin
 	($(ECHO_REPO); $(LUAMIN) bin/ar-remote-display.lua) > dist/bin/ar-remote-display.lua
+
+minify-ar-cam-scan:
+	mkdir -p dist/bin
+	($(ECHO_REPO); $(MINIFY) bin/ar-cam-scan.lua) > dist/bin/ar-cam-scan.lua
 
 minify-netrunner:
 	mkdir -p dist/bin
