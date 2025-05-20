@@ -1,8 +1,8 @@
 import * as ts from "typescript";
 import * as tstl from "typescript-to-lua";
 import * as path from 'path'
-const luaparse = require('luaparse')
-const luamin = require('luamin')
+import luaparse from 'luaparse';
+import luamin from 'luamin';
 
 const plugin: tstl.Plugin = {
     beforeEmit(program: ts.Program, options: tstl.CompilerOptions, emitHost: tstl.EmitHost, result: tstl.EmitFile[]) {
