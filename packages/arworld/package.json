@@ -1,0 +1,32 @@
+{
+  "name": "arworld",
+  "version": "0.0.1",
+  "description": "",
+  "main": "arworld",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "files": [
+    "dist/**/*.lua",
+    "dist/**/*.d.ts"
+  ],
+  "exports": {
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "require": "./dist/*",
+      "import": "./dist/*"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@opct/openos": "^0.1.6",
+    "@typescript-to-lua/language-extensions": "^1.19.0",
+    "opc-glasses": "github:inklesspen1rus/opc-glasses"
+  }
+}
