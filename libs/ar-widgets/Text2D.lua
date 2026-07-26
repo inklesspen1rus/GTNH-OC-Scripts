@@ -32,7 +32,7 @@ function Text2D:redraw()
     w.setText(self._ArText2D_text)
     w.setScale(originFontScale * self._ArText2D_scale)
     local ww, hh = self:getAbsPos()
-    w.setPosition(ww, hh)
+    w.setPosition(ww + calibration.textStartX or 0, hh + calibration.textStartY or 0)
 
     BaseWidget2D.redraw(self)
 end

@@ -3,8 +3,10 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
-    "module": "Node16",
-    "moduleResolution": "nodenext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    // "esModuleInterop": true,
+    // "allowSyntheticDefaultImports": true,
     "types": [
       "lua-types/5.2",
       "@typescript-to-lua/language-extensions",
@@ -15,6 +17,7 @@
       "*": ["./libs/*"]
     },
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "strict": true,
     "outDir": "dist",
     "jsx": "react",
@@ -35,7 +38,7 @@
     "luaPlugins": [
 
       // Minify lualib
-      { "name": "./tstl-plugins/minify-lualib.ts" },
+      // { "name": "./tstl-plugins/minify-lualib.ts" },
 
       // Split lualib from bundle, also minifies lualib
       // { "name": "./tstl-plugins/split-bundle-lualib.ts" },

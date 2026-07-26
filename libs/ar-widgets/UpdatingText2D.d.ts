@@ -1,5 +1,5 @@
 import Context2D from "ar-core/Context2D"
-import Text2D from "./Text2D"
+import Text2D from "ar-widgets/Text2D"
 
 export default class UpdatingText2D extends Text2D {
     static new(props: {

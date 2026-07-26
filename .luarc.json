@@ -14,5 +14,8 @@
         ".vscode",
         "packages"
     ],
-    "workspace.useGitIgnore": false
+    "workspace.useGitIgnore": false,
+    "diagnostics.disable": [
+        "redefined-local"
+    ]
 }

@@ -11,5 +11,5 @@ export default function useInterval(this: void, func: () => void, interval: numb
         return () => {
             cancel(timerId)
         }
-    }, [interval])
+    }, [interval, func])
 }

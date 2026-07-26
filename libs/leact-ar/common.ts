@@ -2,8 +2,8 @@ import { PropsType } from "leact-tstl/leact";
 
 declare module "leact-tstl/leact" {
     interface PropsType {
-        xpos: number;
-        ypos: number;
+        xpos?: number;
+        ypos?: number;
     }
 }
 
@@ -15,6 +15,8 @@ export interface IWidget {
 }
 
 export interface Calibration {
+    textStartX?: number;
+    textStartY?: number;
     screenWidth: number;
     screenHeight: number;
     originFontScale: number;

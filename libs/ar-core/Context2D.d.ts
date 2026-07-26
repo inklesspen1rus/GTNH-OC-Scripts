@@ -1,4 +1,4 @@
-import { Calibration } from "../leact-ar-widgets/common"
+import { Calibration } from "leact-ar/common"
 
 export default class Context2D {
     static fromCalibratedGlasses(props: {

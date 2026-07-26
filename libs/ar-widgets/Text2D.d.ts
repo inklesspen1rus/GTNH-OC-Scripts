@@ -8,4 +8,7 @@ export default class Text2D extends BaseWidget2D {
 
     setText(value: string): void;
     setScale(value: number): void;
+    requestRedraw(): void;
 }
+
+// export = Text2D
