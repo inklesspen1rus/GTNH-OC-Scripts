@@ -12,16 +12,17 @@ export interface Text2DProps {
 }
 
 export default function Text2D(this: void, props: Text2DProps) {
-    const { ar_context_2d } = useHookusRootUserdata()[0] as {
-        ar_context_2d: Context2D;
-    };
+    const { ar_context_2d } = (useHookusRootUserdata()[0] as {
+        userdata: {ar_context_2d: Context2D};
+    }).userdata;
+
+    print('ar_context_2d', ar_context_2d)
 
     useEffect(() => {
         const w = widget.new({ context: ar_context_2d });
         w.setPos(props.x || 0, props.y || 0);
         w.setText(props.text);
         w.setScale(props.scale || 1);
-        w.requestRedraw();
         return () => w.dispose();
     }, [props.text, props.scale, props.x, props.y]);
 }

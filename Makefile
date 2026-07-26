@@ -15,7 +15,7 @@ tstl:
 
 minify: minify-inkgz minify-crc32 minify-crc32_2 minify-witchery-cauldron.lua-autocraft minify-geotrack minify-build-crop-plant minify-ae2-level minify-inklog minify-netrunner minify-ae2-tc-infuser minify-ar-remote-display minify-ar-cam-scan
 
-bundle: tstl bundle-ar-calibrate bundle-ar-remote-display bundle-ar-tps bundle-ar-reboot-button bundle-ar-tps-ts bundle-ar-cam-scan
+bundle: tstl bundle-ar-calibrate bundle-ar-remote-display bundle-ar-tps bundle-ar-reboot-button bundle-ar-tps-ts bundle-ar-cam-scan bundle-leact-sample
 
 bundle-ar-reboot-button:
 	mkdir -p build/bin
