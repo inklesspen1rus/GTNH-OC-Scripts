@@ -14,6 +14,7 @@ So I tried:
 
 * LuaLS (which a pretty good until u find corner cases which I found and hate now)
 * TypeScriptToLua (TSTL) (which a pretty buggy but TypeScript's type system is VERY good)
+  * Also, TypeScriptToLua provider TSX support which allow me make React-like programs.
 
 Because I use all of that shit, I had to make them play together. I mean... I still **have** to make them play together because there are still some issues.
 
