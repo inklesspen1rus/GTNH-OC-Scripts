@@ -24,7 +24,7 @@
     "jsxFactory": "Leact.create",
     "jsxFragmentFactory": "Leact.Fragment",
   },
-  "include": ["libs", "bin", "infrastructure", "tests"],
+  "include": ["libs", "rc.d/**/*", "bin", "infrastructure", "tests"],
   "exclude": ["dist", "tstl-plugins", "packages"],
   "tstl": {
     "luaTarget": "5.3",

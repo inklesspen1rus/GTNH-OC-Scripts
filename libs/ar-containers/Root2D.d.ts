@@ -1,0 +1,8 @@
+import Context2D from "../ar-core/Context2D";
+import BaseWidget2D from "../ar-widgets/BaseWidget2D";
+
+export default class Root2D extends BaseWidget2D {
+    static new(props: {
+        context: Context2D
+    }): Root2D
+}

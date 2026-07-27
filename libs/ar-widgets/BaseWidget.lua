@@ -22,6 +22,16 @@ function BaseWidget:new(o)
     return o
 end
 
+---@param w ArBaseWidget
+---@return boolean
+function BaseWidget:addChild(w)
+    error('This widget does not suppport children')
+end
+
+---@param w ArBaseWidget
+---@return boolean
+function BaseWidget:removeChild(w) return false end
+
 function BaseWidget:init()
     self:requestRedraw()
 end
@@ -60,12 +70,18 @@ end
 
 ---@param props? table
 function BaseWidget:dispose(props)
+    if self.disposed then return end
+
     if not props or not props.dontClearGlasses then
         self:destroyGlasses()
     end
 
     for w in self:children() do
         w:dispose(props)
+    end
+
+    if self.parent then
+        self.parent:removeChild(self)
     end
 
     self.disposed = true

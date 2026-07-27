@@ -1,15 +1,15 @@
-import { cancel, timer } from "event";
+const event = [globalThis.require][0]('event') as Awaited<typeof import('event')>;
 import { useEffect } from "leact-tstl/hooks/effect";
-import useMemo from "leact-tstl/hooks/memo";
 
+/**
+ * Launches background timer to periodically run function.
+ */
 export default function useInterval(this: void, func: () => void, interval: number) {
     useEffect(() => {
-        const timerId = timer(interval, () => {
+        const timerId = event.timer(interval, () => {
             func()
         }, math.huge)
             
-        return () => {
-            cancel(timerId)
-        }
+        return () => event.cancel(timerId);
     }, [interval, func])
 }

@@ -1,57 +1,149 @@
-import Leact, { LeactContext } from 'leact-tstl/leact';
-const event = [globalThis.require][0]('event') as Awaited<typeof import('event')>
+import Leact, { LeactContext, Node } from 'leact-tstl/leact';
+const event = [globalThis.require][0]('event') as Awaited<typeof import('event')>;
 import useState from 'leact-tstl/hooks/state';
 import { useEffect } from 'leact-tstl/hooks/effect';
 import Text2D from 'leact-ar/Text2D';
-// import Context2D from 'ar-core/Context2D';
+import { WithContext2D } from 'leact-ar/context2d';
+import { WrapBox2D } from 'leact-ar/WrapBox2D';
+import { VStack2D } from 'leact-ar/VStack2D';
+import { useRenderPositionKey } from 'leact-tstl/hooks/render-position';
+import Root2D from 'leact-ar/Root2D';
+import { useThread } from 'leact-openos/hooks/thread';
 const Context2D = require('ar-core/Context2D') as Awaited<typeof import("ar-core/Context2D")>['default'];
+const thread = [globalThis.require][0]('thread') as Awaited<typeof import('thread')>;
 
-const component = [globalThis.require][0]('component') as Awaited<typeof import('component')>
-const glasses = component.glasses;
+const component = [globalThis.require][0]('component') as Awaited<typeof import('component')>;
+const glasses = component.glasses as any;
 
 const context = Context2D.fromCalibratedGlasses({
     glasses,
     calibration: {
-        originFontScale:  .5,
-        screenWidth:  480,
-        screenHeight:  270,
-        fontScaleWidthRatio:  4,
-        fontScaleHeightRatio:  8,
+        originFontScale: 1,
+        screenWidth: 640,
+        screenHeight: 360,
+        fontScaleWidthRatio: 4.164,
+        fontScaleHeightRatio: 8,
+        textStartX: 1,
+        textStartY: -1,
     }
-})
-
-let needUpdate = true;
-using ctx = new LeactContext({
-    ar_context_2d: context
-}, executor => {
-    executor && event.timer(0.0, () => executor())
 });
 
-function useInterval(this: void, func: () => void, interval: number) {
-    useEffect(() => {
-        const timerId = event.timer(interval, () => {
-            func();
-        }, math.huge);
+let executorQueue: ((this: void) => void)[] = [];
+let executing = false;
 
-        return () => {
-            event.cancel(timerId);
-        };
-    }, [interval, func]);
+function runExecutors(executor?: (this: void) => void): void {
+    if (executing) return;
+    executing = true;
+    try {
+        executor ??= executorQueue.shift();
+        while (executor) {
+            try {
+                executor();
+            }
+            catch (e) {
+                print(e);
+                os.exit(1);
+            }
+            executor = executorQueue.shift();
+        }
+    } catch (e) {
+        print('Global execution failed');
+        os.exit(1);
+    }
+    executing = false;
 }
 
-function App() {
-    const [state, setState] = useState(0);
+using ctx = new LeactContext({}, executor => {
+    if (executor) {
+        executorQueue.push(executor);
+    }
+});
 
-    useInterval(() => {
-        print('Setting state!');
-        setState(state + 1);
-    }, 1);
-
-    print(state);
-
-    return <Text2D text={'Hello!' + state} x={100} y={100} />;
+function Inner(this: void, { state }: { state: number; }) {
+    return (state % 2 == 0)
+        ? <Text2D text='Hello from Inner' />
+        : undefined;
 }
 
-ctx.mount(<App></App>);
+function Position(this: void) {
+    const [state, setState] = useState([0.0, 0.0, 0.0, 0.0]);
 
-event.pull('interrupted')
+    useThread(() => {
+        const nav = component.navigation as any;
+        const getPosition = (nav.getPosition) as (this: void) => LuaMultiReturn<[number, number, number]>;
+        let start = os.time();
+        while (true) {
+            let done = false;
+            try {
+                let ret = getPosition();
+                const finish = os.time();
+                done = true;
+                setState([...ret, (finish - start) / 72]);
+            } catch { }
+            os.sleep(15);
+            if (done)
+                start = os.time();
+        }
+    }, []);
+
+    return <VStack2D>
+        <Text2D text={string.format('Position: %.1f %.1f %.1f', state[0], state[1], state[2])} />
+        <Text2D text={string.format('Remote call duration: %.1f', state[3])} />
+    </VStack2D>
+}
+
+function TPS(this: void) {
+    const [state, setState] = useState([0.0, 0.0]);
+
+    useThread(() => {
+        const tps: any = component.tps_card;
+        while (true) {
+            os.sleep(.2);
+            
+            const tt = (tps.getOverallTickTime as (this: void) => any)()
+            const tp = (tps.convertTickTimeIntoTps as (this: void, x: any) => any)(tt)
+
+            setState([tp, tt]);
+        }
+    }, []);
+
+    return <Text2D text={string.format('TPS: %.1f (%.1f ms)', state[0], state[1])} />;
+}
+
+function App(this: void) {
+    return <WithContext2D context={context}>
+        <Root2D>
+            <WrapBox2D x={100} y={10} color={0xFF000000}>
+                <WrapBox2D>
+                    <VStack2D>
+                        <TPS />
+                        <Position />
+                    </VStack2D>
+                </WrapBox2D>
+            </WrapBox2D>
+        </Root2D>
+    </WithContext2D>;
+}
+
+declare module "event" {
+    function pull<T extends any[]>(this: void, timeout: number, event: string): LuaMultiReturn<[string, ...T]>;
+}
+
+// const t = thread.create(() => {
+runExecutors(() => ctx.mount(<App></App>));
+while (true) {
+    const name = event.pull(0.05, 'interrupted')[0];
+    if (name === 'interrupted') {
+        break;
+    }
+    runExecutors();
+}
+// });
+// t.join()
+// os.exit(0)
+// {/* <Inner state={state} /> */}
+//                     {/* <WrapBox2D color={state % 2 == 0 ? 0xFF00FFFF : 0xFF0000FF}>
+//                         {state % 2 == 0 ? <WrapBox2D>
+//                             <Text2D text={'Hello!' + state} />
+//                         </WrapBox2D> : <Text2D text={'Hello!' + state} />}
+//                     </WrapBox2D> */}

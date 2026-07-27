@@ -25,6 +25,16 @@ function BaseWidget2D:setPos(x, y)
 end
 function BaseWidget2D:getPos() return self._ArBaseWidget2D_x, self._ArBaseWidget2D_y end
 
+---@param w ArBaseWidget2D
+---@return boolean
+function BaseWidget2D:addChild(w)
+    error('This widget does not suppport children')
+end
+
+---@param w ArBaseWidget2D
+---@return boolean
+function BaseWidget2D:removeChild(w) return false end
+
 ---@return number maxWidth
 ---@return number maxHeight
 function BaseWidget2D:sizeLimit()

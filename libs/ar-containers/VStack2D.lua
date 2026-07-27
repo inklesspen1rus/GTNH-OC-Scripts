@@ -5,14 +5,11 @@ local ArBaseWidget2D = require('ar-widgets.BaseWidget2D')
 ---@field private _ArVStack2D_directionDown boolean
 ---@field private _ArVStack2D_stack ArBaseWidget2D[]
 ---@field private _ArVStack2D_step number
----@field private _ArVStack2D_padding number
 ---@field new fun(self: ArVStack2D, o: ArVStack2D.ConstructorParams): ArVStack2D
-local VStack2D = setmetatable({_ArVStack2D_directionDown=true, _ArVStack2D_step=0, _ArVStack2D_padding=2}, {__index=ArBaseWidget2D})
+local VStack2D = setmetatable({_ArVStack2D_directionDown=true, _ArVStack2D_step=0}, {__index=ArBaseWidget2D})
 
 function VStack2D:init()
     ArBaseWidget2D.init(self)
-    local mean = self.context.calibration.originFontScale * self.context.calibration.fontScaleWidthRatio
-    self._ArVStack2D_padding = mean
     self._ArVStack2D_stack = {}
 end
 
@@ -32,9 +29,13 @@ function VStack2D:insert(widget, position)
     self:requestRedraw()
 end
 
+function VStack2D:addChild(w)
+    self:insert(w)
+    return true
+end
+
 function VStack2D:calculatedSize()
     local step = self._ArVStack2D_step
-    local padding = self._ArVStack2D_padding
     local wX, wH = 0, 0
     for w in self:items() do
         local w, h = w:calculatedSize()
@@ -44,8 +45,8 @@ function VStack2D:calculatedSize()
     wH = wH + step * (#self._ArVStack2D_stack - 1)
 
     return
-        padding * 2 + wX,
-        padding * 2 + wH
+        wX,
+        wH
 end
 
 ---@param index integer
@@ -59,13 +60,14 @@ function VStack2D:removeIndex(index)
 end
 
 ---@param widget ArBaseWidget2D
-function VStack2D:remove(widget)
+function VStack2D:removeChild(widget)
     for w, k in self:items() do
         if w == widget then
             self:removeIndex(k)
-            return
+            return true
         end
     end
+    return false
 end
 
 ---@return fun(): ArBaseWidget2D?, integer?
@@ -78,15 +80,20 @@ function VStack2D:items()
     end
 end
 
+function VStack2D:children()
+    return self:items()
+end
+
 function VStack2D:redraw()
     local dirDown = self._ArVStack2D_directionDown
 
-    local padding = self._ArVStack2D_padding
-    local ch = padding
+    local ch = 0
     local _, mh = self:calculatedSize()
 
+    local step = self._ArVStack2D_step
+
     if not dirDown then
-        ch = mh - padding
+        ch = mh
     end
 
     for child in self:children() do
@@ -95,10 +102,12 @@ function VStack2D:redraw()
         local y = dirDown
             and ch
             or ch - h
-        ch = ch + (dirDown and h + padding or -h - padding)
-
-        child:setPos(padding, y)
+        ch = ch + (dirDown and (h + step) or -(h + step))
+        
+        child:setPos(0, y)
     end
 
     ArBaseWidget2D.redraw(self)
 end
+
+return VStack2D

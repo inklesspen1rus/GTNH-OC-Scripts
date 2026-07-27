@@ -27,7 +27,6 @@ function WrapBox2D:redraw()
         wid.setAlpha(a)
     end
 
-    local padding = self._ArWrapBox2D_padding
     local w, h = self:calculatedSize()
     wid.setPosition(self:getAbsPos())
     wid.setSize(h, w)
@@ -48,7 +47,7 @@ end
 ---@param w? ArBaseWidget2D
 function WrapBox2D:setChild(w)
     if w == self._ArWrapBox2D_child then return end
-    
+
     local currentChild = self._ArWrapBox2D_child
     if currentChild then
         currentChild.parent = nil
@@ -62,6 +61,16 @@ function WrapBox2D:setChild(w)
         w.parent = self
     end
     self:requestRedraw()
+end
+
+function WrapBox2D:addChild(w)
+    if self._ArWrapBox2D_child then return false end
+    self:setChild(w)
+    return true
+end
+
+function WrapBox2D:removeChild(w)
+    if w == self._ArWrapBox2D_child then self:setChild(nil) return true end return false
 end
 
 function WrapBox2D:children()
