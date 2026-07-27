@@ -135,7 +135,7 @@ local function tick()
                 craftable = craftable[1]
 
                 local handle = craftable.request(itemConfig.batch, false, cpu.name)
-                while handle.isComputing() do os.sleep(0.1) end
+                while handle.isComputing() do os.sleep(0.2) end
                 
                 local failed, reason = handle.hasFailed()
                 if failed then
@@ -152,6 +152,7 @@ local function tick()
 
             end
         until 1
+        os.sleep(1)
     end
 end
 
