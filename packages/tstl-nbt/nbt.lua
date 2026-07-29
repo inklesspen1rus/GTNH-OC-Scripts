@@ -2,7 +2,7 @@
 --- A bit modified by inklesspen1rus
 
 local math = math
-local bit32 = require('bit32')
+local bit32 = _G.require('bit32')
 
 local data = {}
 data.raw = {'\1','\0', '\1' ,'A','\162'}

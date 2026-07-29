@@ -8,14 +8,26 @@ LUAMIN = npx luamin -f
 
 ECHO_REPO = echo --- $$(git remote get-url origin) $$(git rev-parse HEAD)
 
-all: tstl minify bundle
+all: tstl-lua-packages tstl minify bundle
+
+tstl-lua-packages:
+	mkdir -p dist/libs/tstl-nbt/
+	cp packages/tstl-nbt/nbt.lua dist/libs/tstl-nbt/nbt.lua
 
 tstl:
 	npx tstl
 
 minify: minify-inkgz minify-crc32 minify-crc32_2 minify-witchery-cauldron.lua-autocraft minify-geotrack minify-build-crop-plant minify-ae2-level minify-inklog minify-netrunner minify-ae2-tc-infuser minify-ar-remote-display minify-ar-cam-scan
 
-bundle: tstl bundle-ar-calibrate bundle-ar-remote-display bundle-ar-tps bundle-ar-reboot-button bundle-ar-tps-ts bundle-ar-cam-scan bundle-leact-sample
+# BUNDLE
+
+bundle: tstl bundle-ar-calibrate bundle-ar-remote-display bundle-ar-tps bundle-ar-reboot-button bundle-ar-tps-ts bundle-ar-cam-scan bundle-leact-sample bundle-get-item-nbt
+
+bundle-get-item-nbt:
+	mkdir -p build/bin
+	mkdir -p dist/bin
+	$(LUABUNDLER) -o build/bin/get-item-nbt-bundled.lua bin/get-item-nbt.lua
+	($(ECHO_REPO); $(LUAMIN) build/bin/get-item-nbt-bundled.lua) > dist/bin/get-item-nbt-bundled.lua
 
 bundle-ar-reboot-button:
 	mkdir -p build/bin

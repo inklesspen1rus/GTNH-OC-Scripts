@@ -1,6 +1,6 @@
 local unbundle = _G.require
 
----@class event
+---@class EventLibrary
 local event    = unbundle('event')
 
 ---@module "serialization"

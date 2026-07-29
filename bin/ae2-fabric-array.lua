@@ -13,7 +13,7 @@ local possible_craftibles = me_in.getCraftables()
 
 ---@param itemstack ItemStack
 local function itemstack_to_string(itemstack)
-    return itemstack.name .. tostring(itemstack.damage) .. '\r\n' .. (itemstack.tag or '')
+    return itemstack.label .. '\r\n' .. itemstack.name .. '\r\n' .. tostring(itemstack.damage) .. '\r\n' .. (itemstack.tag or '')
 end
 
 ---@type table<string, AECraftable>
@@ -81,7 +81,7 @@ while 1 do
                     end
 
                     if req.hasFailed() then
-                        print('Failed to craft', neededSize, c.getItemStack().label)
+                        print('Failed to craft', neededSize, itemKey)
                     else
                         print('Requested', neededSize, c.getItemStack().label)
                     end

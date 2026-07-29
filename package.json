@@ -3,7 +3,7 @@
     "leact-tstl": "file:/home/inklesspen/Documents/MegaProjects/TSX2Lua-TestTSX",
     "luabundler": "^1.2.3",
     "luamin": "^1.0.4",
-    "tstl-nbt": "file:packages/nbt"
+    "tstl-nbt": "file:packages/tstl-nbt"
   },
   "type": "module",
   "devDependencies": {

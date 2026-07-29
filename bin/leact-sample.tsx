@@ -1,5 +1,6 @@
 import Leact, { LeactContext, Node } from 'leact-tstl/leact';
 const event = [globalThis.require][0]('event') as Awaited<typeof import('event')>;
+const ser = [globalThis.require][0]('serialization') as Awaited<typeof import('serialization')>;
 import useState from 'leact-tstl/hooks/state';
 import { useEffect } from 'leact-tstl/hooks/effect';
 import Text2D from 'leact-ar/Text2D';
@@ -59,12 +60,6 @@ using ctx = new LeactContext({}, executor => {
     }
 });
 
-function Inner(this: void, { state }: { state: number; }) {
-    return (state % 2 == 0)
-        ? <Text2D text='Hello from Inner' />
-        : undefined;
-}
-
 function Position(this: void) {
     const [state, setState] = useState([0.0, 0.0, 0.0, 0.0]);
 
@@ -110,6 +105,44 @@ function TPS(this: void) {
     return <Text2D text={string.format('TPS: %.1f (%.1f ms)', state[0], state[1])} />;
 }
 
+function Lapotron(this: void) {
+    const [state, setState] = useState<{
+        stored?: string,
+        max?: string,
+        in5s?: string,
+        out5s?: string,
+    }>({});
+
+    useThread(() => {
+        while (true) {
+            const [_a, _b, port, data] = event.pull()
+            if (+port == 994) {
+                const newData = ser.unserialize(data) as any[]
+                const datasource = newData[0] as string
+                if (datasource == 'datasource.main.supercapacitor') {
+                    setState(newData[1])
+                }
+            }
+        }
+    }, []);
+
+    if (!state.stored) {
+        return undefined;
+    }
+
+    const stored = +state.stored!;
+    const max = +state.max!;
+
+    return <WrapBox2D>
+        <VStack2D>
+            <Text2D>Lapotron Information</Text2D>
+            <Text2D>{string.format('%s (%0.0f%%)', state.stored, stored / max * 100)}</Text2D>
+            <Text2D>{state.in5s}</Text2D>
+            <Text2D>{state.out5s}</Text2D>
+        </VStack2D>
+    </WrapBox2D>
+}
+
 function App(this: void) {
     return <WithContext2D context={context}>
         <Root2D>
@@ -118,6 +151,7 @@ function App(this: void) {
                     <VStack2D>
                         <TPS />
                         <Position />
+                        <Lapotron />
                     </VStack2D>
                 </WrapBox2D>
             </WrapBox2D>
@@ -127,6 +161,7 @@ function App(this: void) {
 
 declare module "event" {
     function pull<T extends any[]>(this: void, timeout: number, event: string): LuaMultiReturn<[string, ...T]>;
+    function pull<T extends any[]>(this: void): LuaMultiReturn<[string, ...T]>;
 }
 
 // const t = thread.create(() => {
