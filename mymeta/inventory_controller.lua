@@ -1,0 +1,3 @@
+---@class inventory_controller
+---@field equip fun()
+---@field equip fun()
