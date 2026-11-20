@@ -1,0 +1,3 @@
+---@class ComponentLibrary
+---@field geolyzer geolyzer
+---@field upgrade_me UpgradeMEComponent
